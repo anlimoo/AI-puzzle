@@ -173,7 +173,7 @@ ostream& operator<<(ostream& os, node& no)
   os << endl;
  }
  return os;}
-void print(int index, vector<node>& rstep_v)
+void print(int index, vector<node>& rstep_v,int step_in)
 {
  
  rstep_v.push_back(v[index]);
@@ -187,12 +187,18 @@ void print(int index, vector<node>& rstep_v)
  
  for (int i = rstep_v.size() - 1; i >= 0; i--){
   cout << "Step " << rstep_v.size() - i<< endl;
-  node p=rstep_v[i];
-  cout<<p.str<<endl;
-  cout<< p << endl;
+  if (rstep_v.size()-i<=step_in)
+  {
+    node p=rstep_v[i];
+    cout<<p.str<<endl;
+  	cout<<p<<endl;
+  }
 }	
 }
 void process(){
+	int step_in;
+	cout<<"step:";
+	cin>>step_in;
 	while(1){
 	int t=0;
     	if(isempty()){
@@ -206,7 +212,7 @@ void process(){
 			if(temp.isend()){
 				t=1;
 				 vector<node> rstep_v;
-				 print(best,rstep_v);
+				 print(best,rstep_v,step_in);
 				 
 			}
 			else{
@@ -234,14 +240,13 @@ int main()
             cin>>intent.number[i][j];
         }
     }
-     int a,b,x;
+    int a,b,x;
     cout << "change num:" <<endl; 
     cin>>a>>b;
     a--;
     b--;
     x=intent.number[a/3][a%3];
     intent.number[a/3][a%3]=intent.number[b/3][b%3];
-    cout<<intent.number[a/3][a%3];
     intent.number[b/3][b%3]=x;
     v.push_back(father);
     process();
