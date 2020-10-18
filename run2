@@ -1,0 +1,177 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h> 
+#include<stdbool.h> 
+#include<string.h>
+typedef struct Node DataType;
+struct Node{
+int status;//状态 
+int father;//父节点指针 
+char move;//父节点到本节点方法 
+}; 
+int goalStatus;
+int Flags[362880];
+char result[4000];
+char MoveWay[]="swad";
+int factorial[15];
+DataType Data[362880];
+int qHead,qTail;
+int IntToInt(int *N)
+{
+int i,j,n,num=0;
+int used[10];
+    memset(used,0,sizeof(int)*10);
+for(i=0;i<9;i++){
+n=0;
+for(j=0;j<N[i];j++)
+if(!used[j])
+n++;
+num+=n*factorial[9-i-1];
+used[N[i]]=1;
+}
+return num;
+} 
+int CharToInt(char *s)// 
+{
+int i,j,N[10];
+for(i=0;i<9;i++)
+for(j=0;j<9;j++){
+if(s[i]==(j+'0')){
+N[i]=j;
+break;
+} 
+}
+return IntToInt(N);
+}
+void IntToChar(char *s,int Num)
+{
+int N[10];
+int used[10];
+memset(used,0,sizeof(int)*10);
+int i,j;
+for(i=0;i<9;i++)
+{
+int tmp,n=0;
+for(j=0;j<9;j++){
+if(!used[j]){
+if(factorial[9-i-1]>=Num+1)break;
+else Num-=factorial[9-i-1];
+}
+}
+N[i]=j;
+used[j]=1;
+}
+for(i=0;i<9;i++)
+*(s+i)=N[i]+'0';
+}
+int NewStatus(int nStatus,char nMove)
+{
+char Tmp[20];  int ZeroPos;
+IntToChar(Tmp,nStatus);
+int i,j;
+for(i=0;i<9;i++)
+if(Tmp[i]=='0'){
+ZeroPos=i;
+break;
+}
+
+switch(nMove){
+case 'w':if(ZeroPos<3)return -1;
+else{
+Tmp[ZeroPos]=Tmp[ZeroPos-3];
+Tmp[ZeroPos-3]='0';
+}
+break;
+case 's':if(ZeroPos>5)return -1;
+else{
+Tmp[ZeroPos]=Tmp[ZeroPos+3];
+Tmp[ZeroPos+3]='0';
+}
+break;
+case 'a':if(ZeroPos%3==0)return -1;
+else{
+Tmp[ZeroPos]=Tmp[ZeroPos-1];
+Tmp[ZeroPos-1]='0';
+}
+break;
+case 'd':if(ZeroPos%3==2)return -1;
+else{
+Tmp[ZeroPos]=Tmp[ZeroPos+1];
+Tmp[ZeroPos+1]='0';
+}
+break;
+}
+return CharToInt(Tmp);
+}
+int BFS(int nStatus)
+{
+int i,nNewStatus;
+qHead=0;  qTail=1;
+memset(Flags,0,sizeof(int)*362880);
+Data[qHead].status=nStatus;
+Data[qHead].father=-1;
+Data[qHead].move='0';
+while(qHead!=qTail)
+{
+nStatus=Data[qHead].status;
+if(nStatus==goalStatus)
+return true;
+for(i=0;i<4;i++){
+nNewStatus=NewStatus(nStatus,MoveWay[i]);
+if(nNewStatus==-1)continue;
+if(Flags[nNewStatus])continue;
+Flags[nNewStatus]=true;
+Data[qTail].status=nNewStatus;
+Data[qTail].father=qHead;
+Data[qTail++].move=MoveWay[i];
+}
+qHead++;
+}
+return false;
+}
+
+
+int main()
+{
+int i,j;
+factorial[0]=factorial[1]=1;
+for(i=2;i<21;i++)
+factorial[i]=i*factorial[i-1]; 
+char final[20];
+printf("final_input:");
+scanf("%s",final);
+goalStatus=CharToInt(final);
+char Start[20];
+printf("start_input:");
+scanf("%s",Start);
+/*******判断是否可行**********/ 
+int sumGoal,sumOri;
+sumGoal=sumOri=0;
+for(i=0;i<8;i++)
+sumGoal+=i;
+for(i=0;i<9;i++){
+if(Start[i]=='0')
+continue;
+for(j=0;j<i;j++){
+if(Start[j]<Start[i]&&Start[j]!='0')
+sumOri++;
+}
+}
+if(sumOri%2!=sumGoal%2){
+printf("Can Not");
+}
+/****************************/ 
+if(BFS(CharToInt(Start))){
+int nMove=0;
+int nPos=qHead;
+do{
+result[nMove++]=Data[nPos].move;
+nPos=Data[nPos].father;
+}while(nPos);
+for(i=nMove-1;i>=0;i--)
+printf("%c",result[i]);
+}
+else
+printf("Can Not");
+return 0;
+} 
