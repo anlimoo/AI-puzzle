@@ -234,6 +234,15 @@ int main()
             cin>>intent.number[i][j];
         }
     }
+     int a,b,x;
+    cout << "change num:" <<endl; 
+    cin>>a>>b;
+    a--;
+    b--;
+    x=intent.number[a/3][a%3];
+    intent.number[a/3][a%3]=intent.number[b/3][b%3];
+    cout<<intent.number[a/3][a%3];
+    intent.number[b/3][b%3]=x;
     v.push_back(father);
     process();
     return 0;
