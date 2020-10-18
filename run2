@@ -31,7 +31,7 @@ used[N[i]]=1;
 }
 return num;
 } 
-int CharToInt(char *s)// 
+int CharToInt(char *s)//
 {
 int i,j,N[10];
 for(i=0;i<9;i++)
