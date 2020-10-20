@@ -227,7 +227,8 @@ def img_match(img_base64):
 
 
 if __name__ == '__main__':
-    url = "http://47.102.118.1:8089/api/challenge/start/c8a568df-2481-411c-9718-bff7e2e84e62"
+    uu=input("请输入URL:")
+    url = uu
     data={'teamid':43,'token':'db89ae69-2536-4f96-91b0-d1c998a7850b'}
     data = json.dumps(data)  # 有的时候data需要时json类型的
     headers = {'content-type': "application/json"}
